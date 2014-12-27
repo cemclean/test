@@ -1,0 +1,63 @@
+--------------------------------------------------------------------                                
+--                                                                --                                
+-- GSD Base Prices                                                --                                
+--                                                                --                                
+-- T23365  01.23.2014 Charlie McLean                              --                                
+--         copied from S5505001                                   --                                
+--         09.29.2014 Charlie McLean                              --                                
+--         exclude Obsolete items                                 --                                
+--                                                                --                                
+--                                                                --                                
+--------------------------------------------------------------------                                
+-- RUNSQLSTM (JDEOBJP/SERSRCLE) (S5505401) COMMIT(*NONE)                                            
+-- RUNSQLSTM (JDEOBJP/SERSRCLE) (S5505401) COMMIT(*NONE) +                                          
+--   DBGVIEW(*SOURCE)                                                                               
+--------------------------------------------------------------------                                
+                                                                                                    
+  create procedure jdeobjp/s5505401                                                                 
+    (in $bdt1    char(6))      -- 114023 today (julian)                                             
+  language SQL                                                                                      
+  modifies SQL data                                                                                 
+                                                                                                    
+  begin                                                                                             
+--------------------------------------------------- global variables                                
+  declare message      char(20);                                                                    
+  declare continue handler for sqlexception                                                         
+      set message = 'ok';                                                                           
+                                                                                                    
+----------------------------------------------------------------------                              
+  insert into serusrdta/f55054                                                                      
+  select                                                                                            
+    imsrp4,                         -- product range                                                
+    ' ',                            -- material number                                              
+    bplitm,                         -- 2nd item number                                              
+    bpitm,                          -- item                                                         
+    imdsc1,                         -- descirption                                                  
+    bpuom,                          -- um                                                           
+    0,                              -- councs + 1% (expeceted price)                                
+    bpuprc/10000,                   -- price at UOM4                                                
+    0,                              -- price at UOM1                                                
+    0,                              -- 310 cost at UOM4                                             
+    0,                              -- 310 cost at UOM1                                             
+    0,                              -- margin                                                       
+    ' ',                            -- cost - user                                                  
+    0,                              -- cost - date changed julian                                   
+    ' ',                            -- cost - date changed mmdddyy                                  
+    0,                              -- cost - time changed                                          
+    bpuser,                         -- price - user                                                 
+    bpupmj,                         -- price - date changed julian                                  
+    ' ',                            -- price - date changed mmdddyy                                 
+    bptday,                         -- price - time changed                                         
+    bpexdj,                         -- expired date                                                 
+    ' '                             -- comment                                                      
+                                                                                                    
+  from f4106, f4101                                                                                 
+  where                                                                                             
+    imitm   = bpitm           and                                                                   
+    bpan8   = 34007819        and                                                                   
+    imuom4  = bpuom           and                                                                   
+    imstkt <> 'O'             and                                                                   
+    bpexdj  > $bdt1;                                                                                
+                                                                                                    
+  end                                                                                               
+                                                                                                    
