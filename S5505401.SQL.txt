@@ -5,7 +5,7 @@
 -- T23365  01.23.2014 Charlie McLean                              --                                
 --         copied from S5505001                                   --                                
 --         09.29.2014 Charlie McLean                              --                                
---         exclude Obsolete items                                 --                                
+--         exclude Obsolete items 1                                --                                
 --                                                                --                                
 --                                                                --                                
 --------------------------------------------------------------------                                
